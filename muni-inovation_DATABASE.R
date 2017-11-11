@@ -566,6 +566,43 @@ library(psych)
 KMO(data_iqb_2008)
 KMO(data_iqb_2012)
 
+
+#---------------------------------------#
+# Principal Components Analysis Method
+
+#------------#
+# 2008       #
+
+# principal component analysis varimax
+psych_pcr_2008 <- principal(data_iqb_2008, nfactors = 1, rotate = "varimax")
+
+# display results
+psych_pcr_2008
+
+pcr1 <- princomp(data_iqb_2008, cor=T)
+pcr1
+# component 1 to index
+data_inova_2008$iqb_pcr_2008 <- range01(as.vector(psych_pcr_2008$scores))
+
+#------------#
+# 2012       
+
+# principal component analysis varimax
+psych_pcr_2012 <- principal(data_iqb_2012, nfactors = 1, rotate = "varimax")
+
+# display results
+psych_pcr_2012
+
+pcr2 <- princomp(data_iqb_2012, cor=T)
+
+# component 1 to index
+data_inova_2012$iqb_pcr_2012 <- range01(as.vector(psych_pcr_2012$scores))
+
+#-----------#
+# plot pcr
+
+screeplot(pcr1, type = "lines")
+lines(1)
 #-----------------------#
 # factor index method   
 #-----------------------#
@@ -601,42 +638,6 @@ iqb_factor_2012 <- (data_iqb_2012$bur_escol_2011 + ( 1 - data_iqb_2012$bur_polit
 # range factor
 data_inova_2012$iqb_factor_2012 <- range01(iqb_factor_2012)
 
-#---------------------------------------#
-# Principal Components Analysis Method
-
-#------------#
-# 2008       #
-
-# principal component analysis varimax
-psych_pcr_2008 <- principal(data_iqb_2008, nfactors = 1, rotate = "varimax")
-
-# display results
-psych_pcr_2008
-
-pcr1 <- princomp(data_iqb_2008, cor=T)
-
-# component 1 to index
-data_inova_2008$iqb_pcr_2008 <- range01(as.vector(psych_pcr_2008$scores))
-
-#------------#
-# 2012       
-
-# principal component analysis varimax
-psych_pcr_2012 <- principal(data_iqb_2012, nfactors = 1, rotate = "varimax")
-
-# display results
-psych_pcr_2012
-
-pcr2 <- princomp(data_iqb_2012, cor=T)
-
-# component 1 to index
-data_inova_2012$iqb_pcr_2012 <- range01(as.vector(psych_pcr_2012$scores))
-
-#-----------#
-# plot pcr
-
-screeplot(pcr1, type = "lines")
-lines(1)
 
 #-----------------#
 # Save data       #
