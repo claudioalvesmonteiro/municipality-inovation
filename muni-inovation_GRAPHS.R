@@ -51,7 +51,7 @@ data_inova_2008 <- read_delim("data_inova_2008.csv",
 
 # manipular banco #
 data_metro <- read_excel("C:/Users/Monteiro-DataPC/Documents/Consulting/Analytique/Inovação Municipal (Carol)/Replication Documentation/Original Data/dados_metropolitano.xls")
-data_t <- merge(data_inova_2008, data_metro, by = "code_muni2", all = T)
+data_t1 <- merge(data_inova_2008, data_metro, by = "code_muni2", all = T)
 
 data_t$inova5 
 
@@ -163,8 +163,7 @@ data_inova_2012 <- read_delim("data_inova_2012.csv",
 
 
 # manipular banco #
-data_metro <- read_excel("dados_metropolitano.xls")
-data_t <- merge(data_inova_2012, data_metro, by = "code_muni2", all = T)
+data_t2 <- merge(data_inova_2012, data_metro, by = "code_muni2", all = T)
 
 data_t$inova7 
 
@@ -385,9 +384,74 @@ barra_est2
 plotbar2 <- ggarrange(barra_est1, barra_est2)
 ggsave("bar2.png", plotbar2, width = 8.2, height =9, units = "in")
 
+#=======================#
+#===== IQB GRAPHS ======#
 
-#==================
+#===== IQBM ACP 2007 =====#
 
+# select variables
+iqb_data07 <- data_t1[,c("Nome_UF.y", "iqb_pcr_2008", "iqb_factor_2008")]
+iqb_data07 <- iqb_data07[complete.cases(iqb_data07),]
+
+# manipulate
+iqb_est07 <- aggregate(iqb_data07, by = list(iqb_data07$Nome_UF.y), mean)
+
+iqb_est07 <- iqb_est07[order(-iqb_est07$iqb_pcr_2008),]
+iqb_est07$Group.1 <- factor(iqb_est07$Group.1, levels = iqb_est07$Group.1)
+iqb_est07$iqb_pcr_2008 <- round(iqb_est07$iqb_pcr_2008, 4)
+
+#---- plot ----#
+bar_iqb07 <- ggplot(iqb_est07, aes(x = iqb_est07$Group.1, y = iqb_est07$iqb_pcr_2008))+
+  geom_bar(stat = "identity", aes(fill = iqb_est07$iqb_pcr_2008), fill = "#1c3c40") +
+  xlab("") + ylab("IQBM") +
+  geom_label(aes(label = iqb_est07$iqb_pcr_2008), size = 2.8) +
+  theme(axis.text.y = element_text(colour = 'black', size = 13), 
+        axis.title.y = element_text(size = 13, 
+                                    hjust = 0.5, vjust = 0.2),
+        axis.text.x = element_text(colour = 'black', size = 13), 
+        axis.title.x = element_text(size = 13, 
+                                    hjust = 0.5, vjust = 0.2))+
+  ggtitle("2007") +
+  guides(fill = F)+
+  theme_arretado()+
+  coord_flip()
+bar_iqb07
+
+#==== IQB ACP 2011 ====#
+iqb_data11 <- data_t2[,c("Nome_UF.y", "iqb_pcr_2012", "iqb_factor_2012")]
+iqb_data11 <- iqb_data11[complete.cases(iqb_data11),]
+
+iqb_est11 <- aggregate(iqb_data11, by = list(iqb_data11$Nome_UF.y), mean)
+iqb_est11 <- iqb_est11[order(-iqb_est11$iqb_pcr_2012),]
+
+iqb_est11$Group.1 <- factor(iqb_est11$Group.1, levels = iqb_est11$Group.1)
+
+iqb_est11$iqb_pcr_2012 <- round(iqb_est11$iqb_pcr_2012, 4)
+
+
+bar_iqb11 <- ggplot(iqb_est11, aes(x = iqb_est11$Group.1, y = iqb_est11$iqb_pcr_2012))+
+  geom_bar(stat = "identity", aes(fill = iqb_est11$iqb_pcr_2012), fill = "#1c3c40") +
+  xlab("") + ylab("IQBM") +
+  geom_label(aes(label = iqb_est11$iqb_pcr_2012), size = 2.8) +
+  theme(axis.text.y = element_text(colour = 'black', size = 13), 
+        axis.title.y = element_text(size = 13, 
+                                    hjust = 0.5, vjust = 0.2),
+        axis.text.x = element_text(colour = 'black', size = 13), 
+        axis.title.x = element_text(size = 13, 
+                                    hjust = 0.5, vjust = 0.2))+
+  ggtitle("2012") +
+  guides(fill = F)+
+  theme_arretado()+
+  coord_flip()
+bar_iqb11
+
+bars_estiqb <- ggarrange(bar_iqb07, bar_iqb11)
+ggsave("barsiqb.png", bars_estiqb, width = 8, height =6, units = "in")
+
+getwd(
+)
+
+data_inova_2008$iqb_pcr_2008
 
 
 
