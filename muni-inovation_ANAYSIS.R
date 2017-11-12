@@ -24,7 +24,7 @@ setwd("C:/Users/Monteiro-DataPC/Documents/Consulting/Analytique/Inovação Municip
 #====================#
 
 # load data
-data_inova_2008 <- read.csv("data_inova_2008.csv", stringsAsfactors = F)             
+data_inova_2008 <- read.csv("data_inova_2008.csv", stringsAsFactors  = F)             
 
 # transform varibales  
 data_inova_2008$inova5           <- factor(data_inova_2008$inova5)
@@ -38,27 +38,28 @@ pcr2008 <- function(x, Alinhamento){
   glm(inova5 ~  
         iqb_pcr_2008 + 
         Alinhamento + 
+        IDHM +
         bur_consel_2008 + 
-        log_to_capital + 
-        log(pop_2008) + 
-        metropolitano + 
         log_orcamento_2008 +
+        log(pop_2008) + 
+        log_to_capital + 
+        metropolitano + 
         cand_reelec_2008 + 
-        cand_esc_2008 + 
-        cand_age_2008, 
+        cand_age_2008 +
+        cand_esc_2008, 
       data = x, family = "binomial")
 }
-
-# display results
-stargazer(pcr_estadual_2008, pcr_federal_2008, pcr_ambos_2008, pcr_n_alinhado_2008,
-          type = "text", title = "Results", style = "ajps", 
-          column.labels  = c("Alinhamento Estadual", "Alinhamento Federal", "Alinhamento Ambos", "Não Alinhado"))  
 
 # run models
 pcr_estadual_2008 <- pcr2008(data_inova_2008, data_inova_2008$alinhamento_estadual_2008)
 pcr_federal_2008 <- pcr2008(data_inova_2008, data_inova_2008$alinhamento_federal_2008)
 pcr_ambos_2008 <- pcr2008(data_inova_2008, data_inova_2008$alinhamento_ambos_2008)
 pcr_n_alinhado_2008 <- pcr2008(data_inova_2008, data_inova_2008$n_alinhado_2008)
+
+# display results
+stargazer(pcr_estadual_2008, pcr_federal_2008, pcr_ambos_2008, pcr_n_alinhado_2008,
+          type = "text", title = "Results", style = "ajps", 
+          column.labels  = c("Alinhamento Estadual", "Alinhamento Federal", "Alinhamento Ambos", "Não Alinhado"))  
 
 # run standardized coefficients
 lm.beta(pcr_estadual_2008)
@@ -192,9 +193,17 @@ pcr2012 <- function(x, Alinhamento){
   
   glm(inova7 ~  
         
-        iqb_pcr_2012 + Alinhamento +
-        bur_consel_2012 + log_to_capital + log(pop_2012) + metropolitano + log_orcamento_2012 +
-        cand_reelec_2012 + cand_esc_2012 + cand_age_2012, 
+        iqb_pcr_2012 + 
+        Alinhamento +
+        IDHM +
+        bur_consel_2012 + 
+        log_orcamento_2012 +
+        log(pop_2012) +
+        log_to_capital + 
+        metropolitano  +
+        cand_reelec_2012 + 
+        cand_age_2012 +
+        cand_esc_2012, 
       data = x, family = "binomial")
 }
 
@@ -209,6 +218,7 @@ stargazer(pcr_estadual_2012, pcr_federal_2012, pcr_ambos_2012, pcr_n_alinhado_20
           type = "text", title = "Results", style = "ajps", 
           column.labels  = c("Alinhamento Estadual", "Alinhamento Federal", "Alinhamento Ambos", "Não Alinhado"))  
 
+# standardized coefficients
 lm.beta(pcr_estadual_2012)
 lm.beta(pcr_federal_2012)
 lm.beta(pcr_ambos_2012)
@@ -243,7 +253,7 @@ stargazer(VA_estadual_2012, VA_federal_2012, VA_ambos_2012, VA_n_alinhado_2012,
 #-------------------------------#
 
 # load data
-data_inova <- read.csv("data_inova_2012_pt.csv", stringsAsfactors = F)             
+data_inova <- read.csv("data_inova_2012_pt.csv", stringsAsFactors = F)             
 
 #----------------------#
 # transform in factor  

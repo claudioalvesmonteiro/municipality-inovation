@@ -578,6 +578,7 @@ psych_pcr_2008 <- principal(data_iqb_2008, nfactors = 1, rotate = "varimax")
 
 # display results
 psych_pcr_2008
+psych_pcr_2008$communality
 
 pcr1 <- princomp(data_iqb_2008, cor=T)
 pcr1
@@ -592,6 +593,7 @@ psych_pcr_2012 <- principal(data_iqb_2012, nfactors = 1, rotate = "varimax")
 
 # display results
 psych_pcr_2012
+psych_pcr_2012$communality
 
 pcr2 <- princomp(data_iqb_2012, cor=T)
 
