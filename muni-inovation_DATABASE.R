@@ -610,7 +610,9 @@ lines(1)
 #-----------------------#
 
 # function for range
-range01 <- function(x){(x-min(x))/(max(x)-min(x))}
+range01 <- function(x){
+  (x-min(x))/(max(x)-min(x))
+  }
 
 #==== 2008 ====#
 

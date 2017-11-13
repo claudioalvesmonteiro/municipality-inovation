@@ -53,9 +53,6 @@ data_inova_2008 <- read_delim("data_inova_2008.csv",
 data_metro <- read_excel("C:/Users/Monteiro-DataPC/Documents/Consulting/Analytique/Inovação Municipal (Carol)/Replication Documentation/Original Data/dados_metropolitano.xls")
 data_t1 <- merge(data_inova_2008, data_metro, by = "code_muni2", all = T)
 
-data_t$inova5 
-
-
 # do total de municipios , quantos inovaram, por estado
 data_map_2008_1 <- data_t[, c("inova5", "code_muni", "code_muni2", "Nome_UF.y", "municipio.y")]
 
