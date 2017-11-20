@@ -11,29 +11,16 @@
 # #UseFreeSoftware                        #
 #-----------------------------------------#
 
-install.packages("readr")
-install.packages("stringr")
-install.packages("stringi")
-install.packages("readxl")
-install.packages("dplyr")
-install.packages("foreign")
-install.packages("xlsx")
-install.packages("corrplot")
-install.packages("data.table")
-
-# set working directory
-setwd("C:/Users/Monteiro-DataPC/Documents/Consulting/Analytique/Inovação Municipal (Carol)/Replication Documentation/Original Data")
+# install packages
+install.packages(c("readr","stringr","stringi","readxl","dplyr","foreign","xlsx","corrplot","data.table", "psych"))
 
 # load required packages
-library(readr)
-library(stringr)
-library(stringi)
-library(readxl)
-library(dplyr)
-library(foreign)
-library(xlsx)
-library(corrplot)
-library(data.table)
+library(readr); library(stringr); library(stringi); library(readxl); library(dplyr)
+library(foreign); library(xlsx); library(corrplot); library(data.table); library(psych)
+
+
+# set database directory
+setwd("/Users/mpcp/Documents/Claudio/untitled folder/municipality-innovation/Original Data")
 
 #---------------------------------#
 # Human Development Index (IDHM) 
@@ -143,7 +130,7 @@ data_metro <- read_excel("dados_metropolitano.xls")
 
 # create and define metropolitan city
 data_metro$metropolitano <- 0
-data_metro$metropolitano[str_detect(data_metro$MesorregiãoGeográfica_Nome, pattern = "Metropolitana")] <- 1
+data_metro$metropolitano[str_detect(data_metro$Mesorregi?oGeogr?fica_Nome, pattern = "Metropolitana")] <- 1
 
 # transform to numeric
 data_metro$metropolitano <- as.numeric(data_metro$metropolitano)
@@ -178,12 +165,6 @@ data_bur_esc_2008 <- data_bur_esc_2008[!(data_bur_esc_2008$ESTATUTARIOS + data_b
 # calculate variable
 data_bur_esc_2008$bur_escol_2008 <- (data_bur_esc_2008$ESTATUTARIOS_ES + data_bur_esc_2008$ESTATUTARIOS_POS + 
                                        data_bur_esc_2008$CLT_ES + data_bur_esc_2008$CLT_POS) / data_bur_esc_2008$ADM_DIRETA
-
-#relacao
-complete <- data_bur_esc_2008[complete.cases(data_bur_esc_2008$),]
-sum(complete$ESTATUTARIOS_ES + complete$ESTATUTARIOS_POS + 
-      complete$CLT_ES + complete$CLT_POS)/
-  sum(complete$ADM_DIRETA)
 
 #--------------------------------------------------------#
 # 2 - Privatization of bureaucracy
@@ -242,14 +223,9 @@ data_bur_total_2011 <- data_bur_total_2011[!(data_bur_total_2011$Estatutarios +d
 data_bur_total_2011$bur_escol_2011 <- (data_bur_total_2011$Estatutarios_ES + data_bur_total_2011$Estatutarios_PG + 
                                          data_bur_total_2011$CLT_S + data_bur_total_2011$CLT_PG) / data_bur_total_2011$Total
 
-complete <- data_bur_total_2011[complete.cases(data_bur_total_2011),]
-sum(complete$Estatutarios_ES + complete$Estatutarios_PG + 
-      complete$CLT_S + complete$CLT_PG)/
-  
-  sum(complete$Total)
 #--------------------------------------------------------#
 # 2 - Privatization of bureaucracy
-# Sem v?nculo / total de funcion?rios
+# Sem vinculo / total de funcion?rios
 
 # calculate variable
 data_bur_total_2011$bur_terc_2011 <- (data_bur_total_2011$SemVinculo_ES + data_bur_total_2011$SemVinculo_PG) / 
@@ -257,7 +233,7 @@ data_bur_total_2011$bur_terc_2011 <- (data_bur_total_2011$SemVinculo_ES + data_b
 
 #-------------------------------------------------------------#
 # 3 - Specialization of Bureaucracy
-# (N?mero de burocratas estatut?rios + CLT / total de burocratas)
+# (Numero de burocratas estatut?rios + CLT / total de burocratas)
 
 # calculate variable
 data_bur_total_2012$bur_espel_2012 <- (data_bur_total_2012$estatutarios + data_bur_total_2012$celetistas)  / data_bur_total_2012$total
@@ -388,7 +364,7 @@ colnames(prefeitos2008) <- c("code_muni", "cand_reelec_2008", "cand_sex_2008",
 # recode escolarity
 prefeitos2008$cand_esc_2008 <- 0
 
-cond <- c("Pós-graduação", "Ensino superior completo")   
+cond <- c("PÃ³s-graduaÃ§Ã£o", "Ensino superior completo")   
 prefeitos2008$cand_esc_2008[prefeitos2008$escolaridade_2008 %in% cond] <- 1
 
 #--------------#
@@ -407,7 +383,7 @@ colnames(prefeitos2012) <- c("code_muni", "cand_reelec_2012", "cand_sex_2012",
 # recode escolarity
 prefeitos2012$cand_esc_2012 <- 0
 
-cond <- c("Pós-graduação", "Ensino superior completo")   
+cond <- c("PÃ³s-graduaÃ§Ã£o", "Ensino superior completo")   
 prefeitos2012$cand_esc_2012[prefeitos2012$escolaridade_2012 %in% cond] <- 1
 
 #--------------#
@@ -447,7 +423,7 @@ data_inova_2008 <- data_inova_2008[!is.na(data_inova_2008$code_muni),]
 data_inova_2008$inova5 <- !is.na(data_inova_2008$inova5)
 data_inova_2008$inova5 <- as.numeric(data_inova_2008$inova5)
 
-data_inova_2008$inova5[data_inova_2008$habilitado == "Não"] <- 0
+data_inova_2008$inova5[data_inova_2008$habilitado == "NÃ£o"] <- 0
 
 #-------------#
 # INOVACAO 7  #
@@ -473,7 +449,7 @@ data_inova_2012 <- data_inova_2012[!is.na(data_inova_2012$code_muni),]
 data_inova_2012$inova7 <- !is.na(data_inova_2012$inova7)
 data_inova_2012$inova7 <- as.numeric(data_inova_2012$inova7)
 
-data_inova_2012$inova7[data_inova_2012$Habilitado == "Não"] <- 0
+data_inova_2012$inova7[data_inova_2012$Habilitado == "NÃ£o"] <- 0
 
 #----------------------------#
 # Receita Orcamentaria       #
@@ -505,10 +481,6 @@ RO2008$code_merge <- with(RO2008, paste0(UF, municipio))
 
 # mergir bancos
 data_inova_2008 <- merge(data_inova_2008, RO2008, by = "code_merge")
-
-#missmap
-library(Amelia)
-missmap(data_inova_2008)
 
 # remover duplicata e missing cases
 data_inova_2008 <- data_inova_2008[!duplicated(data_inova_2008$code_muni),]
@@ -565,14 +537,11 @@ bartlett.test(data_iqb_2008)
 bartlett.test(data_iqb_2012)
 
 #-------- KMO --------#
-library(psych)
 KMO(data_iqb_2008)
 KMO(data_iqb_2012)
 
 # function for range
-range01 <- function(x){
-  (x-min(x))/(max(x)-min(x))
-}
+range01 <- function(x){(x-min(x))/(max(x)-min(x))}
 #---------------------------------------#
 # Principal Components Analysis Method
 
@@ -610,15 +579,10 @@ data_inova_2012$iqb_pcr_2012 <- range01(as.vector(psych_pcr_2012$scores))
 # plot pcr
 
 screeplot(pcr1, type = "lines")
-lines(1)
+
 #-----------------------#
 # factor index method   
 #-----------------------#
-
-# function for range
-range01 <- function(x){
-  (x-min(x))/(max(x)-min(x))
-  }
 
 #==== 2008 ====#
 
@@ -649,10 +613,11 @@ iqb_factor_2012 <- (data_iqb_2012$bur_escol_2011 + ( 1 - data_iqb_2012$bur_polit
 data_inova_2012$iqb_factor_2012 <- range01(iqb_factor_2012)
 
 cor(data_inova_2012$iqb_factor_2012, data_inova_2012$iqb_pcr_2012)
+
 #-----------------#
 # Save data       #
 #-----------------#
-setwd("C:/Users/Monteiro-DataPC/Documents/Consulting/Analytique/Inovação Municipal (Carol)/Replication Documentation/Analysis Data")
+setwd("/Users/mpcp/Documents/Claudio/untitled folder/municipality-innovation/Analysis Data")
 
 #-----------#
 # 2008      #
