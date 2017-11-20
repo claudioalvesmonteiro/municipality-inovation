@@ -11,19 +11,18 @@
 # #UseFreeSoftware                        #
 #-----------------------------------------#
 
-#install.packages("readr")
-#install.packages("stringr")
-#install.packages("stringi")
-#install.packages("readxl")
-#install.packages("dplyr")
-#install.packages("foreign")
-#install.packages("xlsx")
-#install.packages("corrplot")
-#install.packages("data.table")
+install.packages("readr")
+install.packages("stringr")
+install.packages("stringi")
+install.packages("readxl")
+install.packages("dplyr")
+install.packages("foreign")
+install.packages("xlsx")
+install.packages("corrplot")
+install.packages("data.table")
 
 # set working directory
 setwd("C:/Users/Monteiro-DataPC/Documents/Consulting/Analytique/Inovação Municipal (Carol)/Replication Documentation/Original Data")
-
 
 # load required packages
 library(readr)
@@ -181,7 +180,7 @@ data_bur_esc_2008$bur_escol_2008 <- (data_bur_esc_2008$ESTATUTARIOS_ES + data_bu
                                        data_bur_esc_2008$CLT_ES + data_bur_esc_2008$CLT_POS) / data_bur_esc_2008$ADM_DIRETA
 
 #relacao
-complete <- data_bur_esc_2008[complete.cases(data_bur_esc_2008),]
+complete <- data_bur_esc_2008[complete.cases(data_bur_esc_2008$),]
 sum(complete$ESTATUTARIOS_ES + complete$ESTATUTARIOS_POS + 
       complete$CLT_ES + complete$CLT_POS)/
   sum(complete$ADM_DIRETA)
@@ -507,6 +506,10 @@ RO2008$code_merge <- with(RO2008, paste0(UF, municipio))
 # mergir bancos
 data_inova_2008 <- merge(data_inova_2008, RO2008, by = "code_merge")
 
+#missmap
+library(Amelia)
+missmap(data_inova_2008)
+
 # remover duplicata e missing cases
 data_inova_2008 <- data_inova_2008[!duplicated(data_inova_2008$code_muni),]
 data_inova_2008 <- data_inova_2008[complete.cases(data_inova_2008),]
@@ -566,7 +569,10 @@ library(psych)
 KMO(data_iqb_2008)
 KMO(data_iqb_2012)
 
-
+# function for range
+range01 <- function(x){
+  (x-min(x))/(max(x)-min(x))
+}
 #---------------------------------------#
 # Principal Components Analysis Method
 
@@ -642,7 +648,7 @@ iqb_factor_2012 <- (data_iqb_2012$bur_escol_2011 + ( 1 - data_iqb_2012$bur_polit
 # range factor
 data_inova_2012$iqb_factor_2012 <- range01(iqb_factor_2012)
 
-
+cor(data_inova_2012$iqb_factor_2012, data_inova_2012$iqb_pcr_2012)
 #-----------------#
 # Save data       #
 #-----------------#
@@ -658,48 +664,4 @@ write.csv(data_inova_2008, file = "data_inova_2008.csv")
 # 2012      #
 
 write.csv(data_inova_2012, file = "data_inova_2012.csv")
-#write.xlsx(data_inova_2012, file = "data_inova_2012.xls")
-
-#--------------#
-# without PT
-
-# select cases 
-data_inova_2012_pt <- data_inova_2012[data_inova_2012$partido_pt_2012 == 0 ,]
-
-# calculate IQB
-datapt_iqb_2012 <- data_inova_2012_pt[,c("bur_escol_2011", "bur_terc_2011","bur_polit_2012")]
-
-# agregate method
-iqbpt_factor_2012 <- (datapt_iqb_2012$bur_escol_2011 + (1 - datapt_iqb_2012$bur_polit_2012) + 
-                        (1 -datapt_iqb_2012$bur_terc_2011))
-
-# save in database
-data_inova_2012_pt$iqb_factor_2012 <- range01(iqbpt_factor_2012)
-
-# principal component analysis method
-pcr_model2 <- prcomp(datapt_iqb_2012,
-                     center = TRUE,
-                     scale. = TRUE) 
-
-# Eigenvalues
-eig2 <- (pcr_model2$sdev)^2
-
-# Variances in percentage
-variance2 <- eig2*100/sum(eig2)
-
-# Cumulative variances
-cumvar2 <- cumsum(variance2)
-pcr_model_values2 <- data.frame(eig = eig2, variance = variance2,
-                                cumvariance = cumvar2)
-
-
-head(pcr_model_values2)
-plot(pcr_model2, type = "l")
-
-# capture and merge index
-iqbpt_pcr_2012 <- as.data.frame(pcr_model2$x)
-
-data_inova_2012_pt$iqb_pcr_2012 <- range01(iqbpt_pcr_2012$PC1)
-
-write.csv(data_inova_2012_pt, file = "data_inova_2012_pt.csv")
-#write.xlsx(data_inova_2012_pt, file = "data_inova_2012_pt.xls")
+#write.xlsx(data_inova_2012, file = "data_inova_2012.xls"
