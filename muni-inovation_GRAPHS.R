@@ -28,42 +28,104 @@ setwd("/Users/mpcp/Documents/Claudio/untitled folder/municipality-innovation/Ori
 
 # load shapefile and reanme citycode
 shape_brasil <- shapefile("Geodata/bra_cities_2010/municipios_2010.shp")
-shape_brasil$mode_muni2 <- shape_brasil$codigo_ibg
+shape_brasil$code_muni2 <- shape_brasil$codigo_ibg
 
 # load data
 data_inova_2007 <- read.csv("/Users/mpcp/Documents/Claudio/untitled folder/municipality-innovation/Analysis Data/data_inova_2008.csv")
 data_inova_2011 <- read.csv("/Users/mpcp/Documents/Claudio/untitled folder/municipality-innovation/Analysis Data/data_inova_2012.csv")
 
-# merge
-shape_miss <- merge(shape_brasil, data_inova_2007$c, by = "city_code2", all = T)
-
+# merge and create miss variable
+shape_miss <- merge(shape_brasil, data_inova_2007, by = "code_muni2", all = T)
+shape_miss$miss <- 0
+shape_miss$miss[is.na(shape_miss$IDHM)] <- 1
 
 # tranformar shapefile em polygonsdataframe
-data_fortity <- fortify(shp_data, region = "nome")
-Localidade <- shp_dat
+miss_fortity <- fortify(shape_miss, region = "id")
+miss_data <- join(miss_fortity, shape_miss@data, by = "id")
 
-# extrair centroides dos poligonos
-centroids.df <- as.data.frame(coordinates(shp_data))
-names(centroids.df) <- c("Longitude", "Latitude")  #more sensible column Localidades
+ggplot() +
+  geom_polygon(data = miss_data, aes(x = long, y = lat, group = group,
+                                    fill = miss_data$miss, colour= miss_data$miss))+
+  coord_fixed() +
+  theme_nothing()
 
-# This shapefile contained population data, let's plot it.
-variavel <- shp_data@data$variavel
-nomes_centroides <- shp_data$bairros_detasq
+#-------- by state
 
-map_dataframe <- data.frame(Localidade, variavel, centroids.df, nomes_centroides)
+#=== 2007 ===#
+missdata_est <- merge(data_inova_2007, shape_brasil@data, by = "code_muni2", all = T)
+missdata_est$miss <- 0
+missdata_est$miss[is.na(missdata_est$IDHM)] <- 1
 
-ggplot(data = shp_data, aes(map_id = Localidade)) + 
-  geom_map(aes(fill = shp_data$variavel), colour = grey(0.85),  map = data_fortity) +
-  expand_limits(x = data_fortity$long, y = data_fortity$lat) + 
-  # scale_fill_gradient(colours=inferno(10, alpha = 1, begin = 1, end = 0))+
-  scale_fill_gradient(name = "" , low=	"#ffad60", high= "#4c0000")+
-  geom_label_repel(aes(label = nomes_centroides, x = Longitude, y = Latitude),
-                   size = 3, color = "black") + #add labels at centroids
-  coord_fixed(1) +
-  #labs(title = title)
-  theme_nothing(legend = T)
-return(plot)
-}
+# 
+missdata_est07 <- data.frame(aggregate(missdata_est$miss, by=list(Category=missdata_est$uf), FUN=sum))
+countcit_est07 <- data.frame(table(missdata_est$uf))
+countcit_est07$Category <- countcit_est07$Var1
+
+data_miss07 <- merge(missdata_est07, countcit_est07, by = "Category")
+data_miss07$missing <- data_miss07$x / data_miss07$Freq
+data_miss07$missing <- round(data_miss07$missing, 4)
+
+data_miss07 <- data_miss07[order(data_miss07$missing),]
+data_miss07$Category <- factor(data_miss07$Category, levels = data_miss07$Category)
+
+miss07bar<- ggplot(data_miss07, aes(x = data_miss07$Category, y = data_miss07$missing))+
+  geom_bar(stat = "identity", #aes(fill = data_miss07$iqb_pcr_2012), 
+           fill = "#1c3c40") +
+  xlab("") + ylab("Proporção de Casos Faltantes") +
+  geom_label(aes(label = data_miss07$missing), size = 2.8) +
+  theme(axis.text.y = element_text(colour = 'black', size = 13), 
+        axis.title.y = element_text(size = 13, 
+                                    hjust = 0.5, vjust = 0.2),
+        axis.text.x = element_text(colour = 'black', size = 13), 
+        axis.title.x = element_text(size = 13, 
+                                    hjust = 0.5, vjust = 0.2))+
+  ggtitle("2007") +
+  guides(fill = F)+
+  theme_arretado()+
+  coord_flip()
+miss07bar
+
+#=== 2011 ===#
+missdata_est2 <- merge(data_inova_2011, shape_brasil@data, by = "code_muni2", all = T)
+missdata_est2$miss <- 0
+missdata_est2$miss[is.na(missdata_est2$IDHM)] <- 1
+
+# 
+missdata_est11 <- data.frame(aggregate(missdata_est2$miss, by=list(Category=missdata_est2$uf), FUN=sum))
+countcit_est11 <- data.frame(table(missdata_est2$uf))
+countcit_est11$Category <- countcit_est11$Var1
+
+data_miss11 <- merge(missdata_est11, countcit_est11, by = "Category")
+data_miss11$missing <- data_miss11$x / data_miss11$Freq
+data_miss11$missing <- round(data_miss11$missing, 4)
+
+data_miss11 <- data_miss11[order(data_miss11$missing),]
+data_miss11$Category <- factor(data_miss11$Category, levels = data_miss11$Category)
+
+miss11bar<- ggplot(data_miss11, aes(x = data_miss11$Category, y = data_miss11$missing))+
+  geom_bar(stat = "identity", #aes(fill = data_miss07$iqb_pcr_2012), 
+           fill = "#1c3c40") +
+  xlab("") + ylab("Proporção de Casos Faltantes") +
+  geom_label(aes(label = data_miss11$missing), size = 2.8) +
+  theme(axis.text.y = element_text(colour = 'black', size = 13), 
+        axis.title.y = element_text(size = 13, 
+                                    hjust = 0.5, vjust = 0.2),
+        axis.text.x = element_text(colour = 'black', size = 13), 
+        axis.title.x = element_text(size = 13, 
+                                    hjust = 0.5, vjust = 0.2))+
+  ggtitle("2011") +
+  guides(fill = F)+
+  theme_arretado()+
+  coord_flip()
+miss11bar
+
+#@@@@@@@@@@@@@@@@
+
+barmiss <- ggarrange(miss07bar, miss11bar)
+ggsave("barmiss.png", barmiss, width = 9, height =8, units = "in")
+
+#============
+
 
 #======= mapping state ranking ======#
 # carregar banco de dados e shapefile brasil
