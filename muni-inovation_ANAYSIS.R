@@ -21,24 +21,16 @@ library(readr) ; library(stargazer); library(QuantPsyc)
 # set working directory
 setwd("C:/Users/Monteiro-DataPC/Documents/Consulting/Analytique/Inovação Municipal (Carol)/Replication Documentation/Analysis Data")
 
-data_inova_2008$cand_sex_2008 <- 1
-data_inova_2008 <- data_inova_2008[complete.cases(data_inova_2008),]
-summary(data_inova_2008)
-summary(as.factor(data_inova_2008$alinhamento_estadual_2008))
-summary(as.factor(data_inova_2008$alinhamento_federal_2008))
-summary(as.factor(data_inova_2008$alinhamento_ambos_2008))
-summary(as.factor(data_inova_2008$n_alinhado_2008))
-summary(as.factor(data_inova_2008$metropolitano))
-summary(as.factor(data_inova_2008$bur_consel_2008))
-summary(as.factor(data_inova_2008$cand_reelec_2008))
-summary(as.factor(data_inova_2008$cand_esc_2008))
-
 #====================#
 #    2008 MODELS     #
 #====================#
 
 # load data
-data_inova_2008 <- read.csv("data_inova_2008.csv", stringsAsFactors  = F)             
+data_inova_2008 <- read.csv("data_inova_2008.csv", stringsAsFactors  = F) 
+
+# sample
+#data_inova_2008 <-  data_inova_2008[sample(nrow(data_inova_2008), 2400), ]
+
 
 # transform varibales  
 data_inova_2008$inova5           <- factor(data_inova_2008$inova5)
@@ -56,7 +48,6 @@ colnames(data_inova_2008) <- c( "idx", "codigo1", "codigo_ibge_1", "codigo_ibge_
                                 "Alinhamento_Estadual","Alinhamento_Federal", "Alinhado_Ambos", "Não_Alinhado", "UF",                     
                                 "Município", "municipio.y", "Orçamento",   "Orçamento_log",       
                                 "IQB_ACP", "IQB_IA")
-cor(data_inova_2008$IQB_ACP, data_inova_2008$IQB_IA)
 
 #===== IQBM ACP ======#
 acp2008 <- function(x, Alinhamento){
@@ -83,8 +74,6 @@ acp_federal_2008 <- acp2008(data_inova_2008, data_inova_2008$Alinhamento_Federal
 acp_ambos_2008 <- acp2008(data_inova_2008, data_inova_2008$Alinhado_Ambos)
 acp_n_alinhado_2008 <- acp2008(data_inova_2008, data_inova_2008$Não_Alinhado)
 
-
-x <- data_inova_2008[complete.cases(data_inova_2008),]
 # display results
 stargazer(acp_estadual_2008, acp_federal_2008, acp_ambos_2008, acp_n_alinhado_2008,
           type = "text", title = "Results", style = "ajps",  apply.coef = exp,  p.auto=FALSE,
@@ -158,23 +147,10 @@ lm.beta(ia_n_alinhado_2008)
 #=====================#
 #    MODELS 2011      #
 #=====================#
+data_inova_2011 <-  data_inova_2011[sample(nrow(data_inova_2011), 500), ]
 
 # load data
-data_inova_2011 <- read.csv("data_inova_2012.csv", stringsAsFactors = F)             
-data_inova_2011 <- data_inova_2011[complete.cases(data_inova_2011),]
-
-data_inova_2008$cand_sex_2008 <- 1
-data_inova_2008 <- data_inova_2008[complete.cases(data_inova_2008),]
-summary(data_inova_2011)
-summary(as.factor(data_inova_2011$alinhamento_estadual_2012))
-summary(as.factor(data_inova_2011$alinhamento_federal_2012))
-summary(as.factor(data_inova_2011$alinhamento_ambos_2012))
-summary(as.factor(data_inova_2011$n_alinhado_2012))
-summary(as.factor(data_inova_2011$metropolitano))
-summary(as.factor(data_inova_2011$bur_consel_2012))
-summary(as.factor(data_inova_2011$cand_reelec_2012))
-summary(as.factor(data_inova_2011$cand_esc_2012))
-summary(as.factor(data_inova_2011$inova7))
+data_inova_2011 <- read.csv("data_inova_2012.csv", stringsAsFactors = F)
 
 #----------------------#
 # transform in factor  
@@ -264,10 +240,9 @@ lm.beta(des_n_alinhado_2011)
 
 
 # iqb factor  #
-
 ia_2011 <- function(x, Alinhamento){
   glm(Prêmio_Inovação_2011 ~  
-        IQB_ACP +
+        IQB_IA +
         Alinhamento +
         IDHM +
         Conselho +
@@ -289,7 +264,7 @@ ia_n_alinhado_2011 <- ia_2011(data_inova_2011, data_inova_2011$Não_Alinhado)
 
 # display results
 stargazer(ia_estadual_2011, ia_federal_2011, ia_ambos_2011, ia_n_alinhado_2011,
-          type = "text", title = "Results", style = "ajps", 
+          type = "text", title = "Results", style = "ajps", apply.coef = exp,  p.auto=FALSE,
           column.labels  = c("Alinhamento Estadual", "Alinhamento Federal", "Alinhamento Ambos", "Não Alinhado"))  
 
 # run standardized coefficients
