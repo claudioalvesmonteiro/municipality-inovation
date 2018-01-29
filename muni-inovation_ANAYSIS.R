@@ -38,7 +38,7 @@ data_inova_2008$metropolitano    <- factor(data_inova_2008$metropolitano, levels
 data_inova_2008$cand_reelec_2008 <- factor(data_inova_2008$cand_reelec_2008)
 data_inova_2008$cand_sex_2008    <- factor(data_inova_2008$cand_sex_2008, levels = c("0", "1"), labels = c("-masc", "-fem"))
 data_inova_2008$cand_age_2008 <- as.numeric(data_inova_2008$cand_age_2008)
-data_inova_2007 <- data_inova_2007[complete.cases(data_inova_2007),]
+# data_inova_2007 <- data_inova_2007[complete.cases(data_inova_2007),]
 
 # rename colnames
 colnames(data_inova_2008) <- c( "idx", "codigo1", "codigo_ibge_1", "codigo_ibge_2", "IDHM", "Sigla_Estado", "municipio", "Estado",                  
@@ -161,14 +161,14 @@ data_inova_2011$cand_reelec_2012     <- factor(data_inova_2011$cand_reelec_2012)
 data_inova_2011$cand_age_2012    <- as.numeric(data_inova_2011$cand_age_2012)
 
 # rename colnames
-colnames(data_inova_2011) <- c( "idx", "codigo1", "codigo_ibge_1", "codigo_ibge_2", "IDHM", "Sigla_Estado", "municipio", "Estado",                  
-                                "Dist_ncia_At__Bras_lia_log", "Dist_ncia_at__Capital_log",  "Munic_pio_Metropolitano", "Popula__o",                
-                                "Partido_PT","Pr_mio_Inova__o_2011", "Popula__o2", "Conselho", "Reelei__o",  
-                                "cand_sex_2011", "Escolaridade_Prefeito", "Idade_Prefeito",  "Escolaridade_da_Burocracia",        
-                                "Terceiriza__o_da_Burocracia", "Especializa__o_da_Burocracia",  "Politiza__o_da_Burocracia", 
-                                "Alinhamento_Estadual","Alinhamento_Federal", "Alinhado_Ambos", "N_o_Alinhado", "UF",                     
-                                "Munic_pio", "municipio.y", "Or_amento",   "Or_amento_log",       
-                                 "IQB_ACP", "IQB_IA")
+colnames(data_inova_2008) <- c( "idx", "codigo1", "codigo_ibge_1", "codigo_ibge_2", "IDHM", "Sigla_Estado", "municipio", "Estado",                  
+                                "Distância_Até_Brasília_(log)", "Distância_até_Capital_log",  "Município_Metropolitano", "População",                
+                                "Prêmio_Inovação_2007", "População2", "Conselho", "Reeleição",  
+                                "cand_sex_2008", "Escolaridade_Prefeito", "Idade_Prefeito",  "Escolaridade_da_Burocracia",        
+                                "Terceirização_da_Burocracia", "Especialização_da_Burocracia",  "Politização_da_Burocracia", 
+                                "Alinhamento_Estadual","Alinhamento_Federal", "Alinhado_Ambos", "Não_Alinhado", "UF",                     
+                                "Município", "municipio.y", "Orçamento",   "Orçamento_log",       
+                                "IQB_ACP", "IQB_IA")
 #===== IQB PCA ======#
 acp2011 <- function(x, Alinhamento){
   glm(Pr_mio_Inova__o_2011 ~  
