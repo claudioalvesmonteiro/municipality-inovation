@@ -12,45 +12,130 @@
 #-----------------------------------------#
 
 
-# carregar pacotes
-library(readr)
-library(raster)
-library(readxl)
+# install packages
+install.packages(c("readr", "raster", "readxl", "ggthemes", "qdap", "readxl", "ggplot2", "directlabels", "ggrepel", "readr",
+                   "plyr", "rgdal", "ggmap", "maps", "mapdata", "maptools", "stringi", "DT", "xtable", "ggpubr", "dplyr"))
 
 # carregar pacotes
-library(ggthemes)
-library(qdap)
-library(readxl)
-library(xlsx)
-library(ggplot2)
-library(directlabels)
-library(ggrepel)
-library(readr)
-library(plyr)
-library(rgdal)
-library(ggmap)
-library(maps)
-library(mapdata)
-library(raster)
-library(maptools)
-library(stringi)
-library(DT)
-library(xtable)
-library(ggpubr)
-library(dplyr)
+library(readr); library(raster); library(readxl); library(ggthemes); library(qdap); library(ggplot2); library(directlabels)
+library(ggrepel); library(readr); library(plyr); library(rgdal); library(ggmap); library(maps); library(mapdata)
+library(maptools); library(stringi); library(DT); library(xtable); library(ggpubr); library(dplyr)
 
+# set working directory
+setwd("/Users/mpcp/Documents/Claudio/untitled folder/municipality-innovation/Original Data")
+
+#====== mapping missing data ========#
+
+# load shapefile and reanme citycode
+shape_brasil <- shapefile("Geodata/bra_cities_2010/municipios_2010.shp")
+shape_brasil$code_muni2 <- shape_brasil$codigo_ibg
+
+# load data
+data_inova_2007 <- read.csv("/Users/mpcp/Documents/Claudio/untitled folder/municipality-innovation/Analysis Data/data_inova_2008.csv")
+data_inova_2011 <- read.csv("/Users/mpcp/Documents/Claudio/untitled folder/municipality-innovation/Analysis Data/data_inova_2012.csv")
+
+# merge and create miss variable
+shape_miss <- merge(shape_brasil, data_inova_2007, by = "code_muni2", all = T)
+shape_miss$miss <- 0
+shape_miss$miss[is.na(shape_miss$IDHM)] <- 1
+
+# tranformar shapefile em polygonsdataframe
+miss_fortity <- fortify(shape_miss, region = "id")
+miss_data <- join(miss_fortity, shape_miss@data, by = "id")
+
+ggplot() +
+  geom_polygon(data = miss_data, aes(x = long, y = lat, group = group,
+                                    fill = miss_data$miss, colour= miss_data$miss))+
+  coord_fixed() +
+  theme_nothing()
+
+#-------- by state
+
+#=== 2007 ===#
+missdata_est <- merge(data_inova_2007, shape_brasil@data, by = "code_muni2", all = T)
+missdata_est$miss <- 0
+missdata_est$miss[is.na(missdata_est$IDHM)] <- 1
+
+# 
+missdata_est07 <- data.frame(aggregate(missdata_est$miss, by=list(Category=missdata_est$uf), FUN=sum))
+countcit_est07 <- data.frame(table(missdata_est$uf))
+countcit_est07$Category <- countcit_est07$Var1
+
+data_miss07 <- merge(missdata_est07, countcit_est07, by = "Category")
+data_miss07$missing <- data_miss07$x / data_miss07$Freq
+data_miss07$missing <- round(data_miss07$missing, 4)
+
+data_miss07 <- data_miss07[order(data_miss07$missing),]
+data_miss07$Category <- factor(data_miss07$Category, levels = data_miss07$Category)
+
+miss07bar<- ggplot(data_miss07, aes(x = data_miss07$Category, y = data_miss07$missing))+
+  geom_bar(stat = "identity", #aes(fill = data_miss07$iqb_pcr_2012), 
+           fill = "#1c3c40") +
+  xlab("") + ylab("ProporÃ§Ã£o de Casos Faltantes") +
+  geom_label(aes(label = data_miss07$missing), size = 2.8) +
+  theme(axis.text.y = element_text(colour = 'black', size = 13), 
+        axis.title.y = element_text(size = 13, 
+                                    hjust = 0.5, vjust = 0.2),
+        axis.text.x = element_text(colour = 'black', size = 13), 
+        axis.title.x = element_text(size = 13, 
+                                    hjust = 0.5, vjust = 0.2))+
+  ggtitle("2007") +
+  guides(fill = F)+
+  theme_arretado()+
+  coord_flip()
+miss07bar
+
+#=== 2011 ===#
+missdata_est2 <- merge(data_inova_2011, shape_brasil@data, by = "code_muni2", all = T)
+missdata_est2$miss <- 0
+missdata_est2$miss[is.na(missdata_est2$IDHM)] <- 1
+
+# 
+missdata_est11 <- data.frame(aggregate(missdata_est2$miss, by=list(Category=missdata_est2$uf), FUN=sum))
+countcit_est11 <- data.frame(table(missdata_est2$uf))
+countcit_est11$Category <- countcit_est11$Var1
+
+data_miss11 <- merge(missdata_est11, countcit_est11, by = "Category")
+data_miss11$missing <- data_miss11$x / data_miss11$Freq
+data_miss11$missing <- round(data_miss11$missing, 4)
+
+data_miss11 <- data_miss11[order(data_miss11$missing),]
+data_miss11$Category <- factor(data_miss11$Category, levels = data_miss11$Category)
+
+miss11bar<- ggplot(data_miss11, aes(x = data_miss11$Category, y = data_miss11$missing))+
+  geom_bar(stat = "identity", #aes(fill = data_miss07$iqb_pcr_2012), 
+           fill = "#1c3c40") +
+  xlab("") + ylab("ProporÃ§Ã£o de Casos Faltantes") +
+  geom_label(aes(label = data_miss11$missing), size = 2.8) +
+  theme(axis.text.y = element_text(colour = 'black', size = 13), 
+        axis.title.y = element_text(size = 13, 
+                                    hjust = 0.5, vjust = 0.2),
+        axis.text.x = element_text(colour = 'black', size = 13), 
+        axis.title.x = element_text(size = 13, 
+                                    hjust = 0.5, vjust = 0.2))+
+  ggtitle("2011") +
+  guides(fill = F)+
+  theme_arretado()+
+  coord_flip()
+miss11bar
+
+#@@@@@@@@@@@@@@@@
+
+barmiss <- ggarrange(miss07bar, miss11bar)
+ggsave("barmiss.png", barmiss, width = 9, height =8, units = "in")
+
+#============
+
+
+#======= mapping state ranking ======#
 # carregar banco de dados e shapefile brasil
-shape_brasil <- shapefile("C:/Users/Monteiro-DataPC/Documents/Consulting/Analytique/Inovação Municipal (Carol)/Replication Documentation/Original Data/Geodata/estados_2010.shp")
+shape_brasil <- shapefile("Geodata/bra_cities_2010/estados_2010.shp")
 
-setwd("C:/Users/Monteiro-DataPC/Documents/Consulting/Analytique/Inovação Municipal (Carol)/Replication Documentation/Analysis Data")
-
-data_inova_2008 <- read_delim("data_inova_2008.csv", 
-                              ",", escape_double = FALSE, locale = locale(encoding = "latin1"), 
+data_inova_2008 <- read_delim("data_inova_2008.csv", ",", escape_double = FALSE, locale = locale(encoding = "latin1"), 
                               trim_ws = TRUE)         
 
-
 # manipular banco #
-data_metro <- read_excel("C:/Users/Monteiro-DataPC/Documents/Consulting/Analytique/Inovação Municipal (Carol)/Replication Documentation/Original Data/dados_metropolitano.xls")
+data_metro <- read_excel("C:/Users/Monteiro-DataPC/Documents/Consulting/Analytique/Inova??o Municipal (Carol)/Replication Documentation/Original Data/dados_metropolitano.xls")
 data_t1 <- merge(data_inova_2008, data_metro, by = "code_muni2", all = T)
 
 # do total de municipios , quantos inovaram, por estado
@@ -137,7 +222,7 @@ map1_2008 <- ggplot(data = map_dataframe, aes(map_id = Estado)) +
   geom_map(aes(fill = map_dataframe$variavel), colour = grey(0.85),  map = data_fortity) +
   expand_limits(x = data_fortity$long, y = data_fortity$lat) +
   # scale_fill_gradient(colours=inferno(10, alpha = 1, begin = 1, end = 0))+
-  scale_fill_gradient(name = "Proporção" , low="#6dc066", high= "#021631")+
+  scale_fill_gradient(name = "Propor??o" , low="#6dc066", high= "#021631")+
   geom_label_repel(aes(label = nomes_centroides, x = Longitude, y = Latitude), size = 2.3, 
                    color = "black") + #add labels at centroids
   coord_fixed(1) +
@@ -249,7 +334,7 @@ map1_2012 <- ggplot(data = map_dataframe, aes(map_id = Estado)) +
   geom_map(aes(fill = map_dataframe$variavel), colour = grey(0.85),  map = data_fortity) +
   expand_limits(x = data_fortity$long, y = data_fortity$lat) +
   # scale_fill_gradient(colours=inferno(10, alpha = 1, begin = 1, end = 0))+
-  scale_fill_gradient(name = "Proporção" , low="#6dc066", high= "#021631")+
+  scale_fill_gradient(name = "Propor??o" , low="#6dc066", high= "#021631")+
   geom_label_repel(aes(label = nomes_centroides, x = Longitude, y = Latitude), size = 2.3, 
                    color = "black") + #add labels at centroids
   coord_fixed(1) +
@@ -274,12 +359,12 @@ ggsave("maps.png", maps1, width = 5, height =4, units = "in")
 
 #---- 2008 ----#
 barra_inova_2008 <- data.frame(table(data_inova_2008$inova5))
-barra_inova_2008$Var1 <- factor(barra_inova_2008$Var1, levels = c('0', '1'), labels = c("Não Inovou", "Inovou"))
+barra_inova_2008$Var1 <- factor(barra_inova_2008$Var1, levels = c('0', '1'), labels = c("N?o Inovou", "Inovou"))
 
 barra_inova1 <- ggplot(barra_inova_2008, aes(x = barra_inova_2008$Var1, y = barra_inova_2008$Freq))+
   geom_bar(stat = "identity", aes(fill = barra_inova_2008$Var1)) +
-  xlab("Inovação") + ylab("Número de Municípios") +
-  scale_fill_manual("Sexo", values = c("Inovou" = "#021631", "Não Inovou" =  "lightgreen"))+
+  xlab("Inova??o") + ylab("N?mero de Munic?pios") +
+  scale_fill_manual("Sexo", values = c("Inovou" = "#021631", "N?o Inovou" =  "lightgreen"))+
   geom_label(aes(y = 100,label = barra_inova_2008$Freq)) +
   theme(axis.text.y = element_text(colour = 'black', size = 13), 
         axis.title.y = element_text(size = 13, 
@@ -296,12 +381,12 @@ barra_inova1
 
 #---- 2012 ----#
 barra_inova_2012 <- data.frame(table(data_inova_2012$inova7))
-barra_inova_2012$Var1 <- factor(barra_inova_2012$Var1, levels = c('0', '1'), labels = c("Não Inovou", "Inovou"))
+barra_inova_2012$Var1 <- factor(barra_inova_2012$Var1, levels = c('0', '1'), labels = c("N?o Inovou", "Inovou"))
 
 barra_inova2 <- ggplot(barra_inova_2012, aes(x = barra_inova_2012$Var1, y = barra_inova_2012$Freq))+
   geom_bar(stat = "identity", aes(fill = barra_inova_2012$Var1)) +
-  xlab("Inovação") + ylab("Número de Municípios") +
-  scale_fill_manual("Sexo", values = c("Inovou" = "#021631", "Não Inovou" =  "lightgreen"))+
+  xlab("Inova??o") + ylab("N?mero de Munic?pios") +
+  scale_fill_manual("Sexo", values = c("Inovou" = "#021631", "N?o Inovou" =  "lightgreen"))+
   geom_label(aes(y = 100,label = barra_inova_2012$Freq)) +
   theme(axis.text.y = element_text(colour = 'black', size = 13), 
         axis.title.y = element_text(size = 13, 
@@ -336,7 +421,7 @@ inova_map_2008$prop_inova <- round(inova_map_2008$prop_inova, 2)
 
 barra_est1 <- ggplot(inova_map_2008, aes(x = inova_map_2008$estado, y = inova_map_2008$prop_inova))+
   geom_bar(stat = "identity", aes(fill = inova_map_2008$prop_inova), fill = "#1c3c40") +
-  xlab("") + ylab("Proporção") +
+  xlab("") + ylab("Propor??o") +
   geom_label(aes(label = inova_map_2008$prop_inova),  size = 3.5) +
   theme(axis.text.y = element_text(colour = 'black', size = 13), 
         axis.title.y = element_text(size = 13, 
@@ -363,7 +448,7 @@ inova_map_2012$prop_inova <- round(inova_map_2012$prop_inova, 2)
 
 barra_est2 <- ggplot(inova_map_2012, aes(x = inova_map_2012$estado, y = inova_map_2012$prop_inova))+
   geom_bar(stat = "identity", aes(fill = inova_map_2012$prop_inova), fill = "#1c3c40") +
-  xlab("") + ylab("Proporção") +
+  xlab("") + ylab("Propor??o") +
   geom_label(aes(label = inova_map_2012$prop_inova), size = 3.5) +
   theme(axis.text.y = element_text(colour = 'black', size = 13), 
         axis.title.y = element_text(size = 13, 
@@ -449,8 +534,3 @@ getwd(
 )
 
 data_inova_2008$iqb_pcr_2008
-
-
-
-#============== MISSING CASES ===============#
-
