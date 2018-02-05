@@ -50,8 +50,13 @@ acp2008 <- function(x, Alinhamento){
         Orçamento_log +
         Conselho +
         Distância_até_Capital_log +
+<<<<<<< HEAD
         Município_Metropolitano +
         Reeleição +
+=======
+    #    Município_Metropolitano +
+         Reeleição +
+>>>>>>> ae2510b8784a4f721882d140689f2e082a6d02b1
         Idade_Prefeito +
         Escolaridade_Prefeito+
         log(População) +
