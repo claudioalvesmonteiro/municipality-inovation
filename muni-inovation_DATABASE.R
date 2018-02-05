@@ -27,7 +27,9 @@ setwd("/Users/mpcp/Documents/Claudio/untitled folder/municipality-innovation/Ori
 #---------------------------------#
 
 # load AtlasBrasil data
-atlas_data <- read.csv("AtlasBrasil_Consulta.csv", sep = ";", stringsAsFactors = F)
+atlas_data <- AtlasBrasil_Consulta <- data.frame(data.frame(read_delim("AtlasBrasil_Consulta.csv", 
+                                                 ";", escape_double = FALSE, locale = locale(encoding = "latin1"), 
+                                                 trim_ws = TRUE)))
 
 # remove 1st line 'Brasil'
 atlas_data <- atlas_data[-1,]
@@ -45,7 +47,10 @@ atlas_data$IDHM <- as.numeric(atlas_data$IDHM)
 # Distance to federal and state capital
 #--------------------------------------------#
 
-distance_data <- read.csv("distanciaatebrasilia.csv", sep = ";", stringsAsFactors = F)
+distance_data <- data.frame(read_delim("distanciaatebrasilia.csv", 
+                            ";", escape_double = FALSE, locale = locale(encoding = "latin1"), 
+                            trim_ws = TRUE))
+  
 
 #---------------------------#
 # Log to federal capital 
@@ -130,7 +135,7 @@ data_metro <- read_excel("dados_metropolitano.xls")
 
 # create and define metropolitan city
 data_metro$metropolitano <- 0
-data_metro$metropolitano[str_detect(data_metro$Mesorregi?oGeogr?fica_Nome, pattern = "Metropolitana")] <- 1
+data_metro$metropolitano[str_detect(data_metro$MesorregiãoGeográfica_Nome, pattern = "Metropolitana")] <- 1
 
 # transform to numeric
 data_metro$metropolitano <- as.numeric(data_metro$metropolitano)
@@ -143,9 +148,13 @@ data_inova <- merge(data_inova, data_metro[,c(3, 8, 14)], by = "code_muni2")
 #----------------------------#
 
 # load data
-data_bur_total_2008 <- read.csv("Burocratas_2008 (total).csv", sep = ";", stringsAsFactors = F)
-data_bur_esc_2008 <- read.csv("Burocratas_2008 (escolaridade).csv", sep = ";", stringsAsFactors = F)
-
+data_bur_total_2008 <- data.frame(read_delim("Burocratas_2008 (total).csv", 
+                                  ";", escape_double = FALSE, locale = locale(encoding = "latin1"), 
+                                  trim_ws = TRUE))
+data_bur_esc_2008 <- data.frame(read_delim("Burocratas_2008 (escolaridade).csv", 
+                                ";", escape_double = FALSE, locale = locale(encoding = "latin1"), 
+                                trim_ws = TRUE))
+  
 #--------------------#
 # manipulate data
 
@@ -155,12 +164,10 @@ data_bur_esc_2008 <-  data.frame(sapply(data_bur_esc_2008, function(x) as.numeri
 
 #---------------------------------------------------------#
 # 1 - Knowledge of Permanent Bureaucracy
-# ( Estatutarios + CLT (ensino superior e p?s-gradua??o) / total de funcion?rios)
+# ( Estatutarios + CLT (ensino superior e pos-graduacaoo) / total de funcion?rios)
 
 data_bur_total_2008 <- data_bur_total_2008[!(data_bur_total_2008$estatutarios + data_bur_total_2008$clt)  == 0,]
 data_bur_esc_2008 <- data_bur_esc_2008[!(data_bur_esc_2008$ESTATUTARIOS + data_bur_esc_2008$CLT)  == 0,]
-
-(data_bur_total_2012$estatutarios + data_bur_total_2012$celetistas) 
 
 # calculate variable
 data_bur_esc_2008$bur_escol_2008 <- (data_bur_esc_2008$ESTATUTARIOS_ES + data_bur_esc_2008$ESTATUTARIOS_POS + 
@@ -201,9 +208,14 @@ data_inova <- merge(data_inova, data_bur_2008, by="code_muni")
 #--------------------------------#
 
 # load data
-data_bur_total_2011 <- read.csv("burocratas_total_2011.csv", sep = ";", stringsAsFactors = F)
-data_bur_total_2012 <- read.csv("funcionarios_2012.csv", sep = ";", stringsAsFactors = F)
-
+data_bur_total_2011 <- data.frame(read_delim("burocratas_total_2011.csv", 
+                                  ";", escape_double = FALSE, locale = locale(encoding = "latin1"), 
+                                  trim_ws = TRUE))
+  
+data_bur_total_2012 <- data.frame(read_delim("funcionarios_2012.csv", 
+                                  ";", escape_double = FALSE, locale = locale(encoding = "latin1"), 
+                                  trim_ws = TRUE))
+  
 # remove rows without data
 tail(data_bur_total_2011$CodIBGE, 60)
 data_bur_total_2011 <- data_bur_total_2011[1:5565,]
@@ -261,8 +273,10 @@ data_inova <- merge(data_inova, data_bur_total_2012[,c(8:10)], by="code_muni")
 # 2008
 
 # load data
-consel_2008 <-read.csv("CM_2008_recod.csv", sep = ";")
-
+consel_2008 <- data.frame(read_delim("CM_2008_recod.csv", 
+                          ";", escape_double = FALSE, locale = locale(encoding = "latin1"), 
+                          trim_ws = TRUE))
+  
 # recode
 consel_2008$bur_consel_2008 <- consel_2008$CM_dic_2008
 consel_2008$code_muni <- consel_2008$CodMunicipio
@@ -274,7 +288,9 @@ data_inova <- merge(data_inova, consel_2008[, 9:10], by = "code_muni")
 # 2012
 
 # load data
-consel_2012 <-read.csv("CM_2012_rec.csv", sep = ";")
+consel_2012 <-  data.frame(read_delim("CM_2012_rec.csv", 
+                           ";", escape_double = FALSE, locale = locale(encoding = "latin1"), 
+                           trim_ws = TRUE))
 
 # recode
 consel_2012$bur_consel_2012 <- consel_2012$CM_dic_2012
@@ -396,7 +412,9 @@ data_inova <- merge(prefeitos2012[,-5], data_inova, by = "code_muni")
 #--------------#
 
 # load data
-inova5_manipul <- read.csv("inova5_manipul.csv", sep = ";", dec = ".", stringsAsFactors = F)
+inova5_manipul <-  data.frame(read_delim("inova5_manipul.csv", 
+                              ";", escape_double = FALSE, locale = locale(encoding = "latin1"), 
+                              trim_ws = TRUE))
 
 #----------------------------------#
 # manipulate data_inova for merging
@@ -484,7 +502,7 @@ data_inova_2008 <- merge(data_inova_2008, RO2008, by = "code_merge")
 
 # remover duplicata e missing cases
 data_inova_2008 <- data_inova_2008[!duplicated(data_inova_2008$code_muni),]
-#data_inova_2008 <- data_inova_2008[complete.cases(data_inova_2008),]
+data_inova_2008 <- data_inova_2008[complete.cases(data_inova_2008),]
 
 #---------------#  
 # 2012          #
@@ -512,7 +530,7 @@ data_inova_2012 <- merge(data_inova_2012, RO2012, by = "code_merge")
 
 # remover duplicata e missing cases
 data_inova_2012 <- data_inova_2012[!duplicated(data_inova_2012$code_muni),]
-#data_inova_2012 <- data_inova_2012[complete.cases(data_inova_2012),]
+data_inova_2012 <- data_inova_2012[complete.cases(data_inova_2012),]
 
 #===================================#
 # QUALITY OF BUREAUCRACY INDEX      #

@@ -46,14 +46,14 @@ colnames(data_inova_2008) <- c( "idx", "codigo1", "codigo_ibge_1", "codigo_ibge_
 acp2008 <- function(x, Alinhamento){
   glm(Prêmio_Inovação_2007 ~  
         IQB_ACP +
-  #      Alinhamento +
-   #     Conselho +
-    #   Orçamento_log +
-    #   Distância_até_Capital_log +
-    #   Município_Metropolitano +
-    #    Reeleição +
-     #   Idade_Prefeito +
-   #     Escolaridade_Prefeito+
+        Alinhamento +
+        Orçamento_log +
+        Conselho +
+        Distância_até_Capital_log +
+        Município_Metropolitano +
+        Reeleição +
+        Idade_Prefeito +
+        Escolaridade_Prefeito+
         log(População) +
         IDHM
    , 
@@ -170,7 +170,7 @@ acp2011 <- function(x, Alinhamento){
         Orçamento_log +
         log(População) +
         Distância_até_Capital_log +
-        Município_Metropolitano +
+ #       Município_Metropolitano +
         Reeleição +
         Idade_Prefeito +
         Escolaridade_Prefeito, 
@@ -188,11 +188,6 @@ stargazer(acp_estadual_2011, acp_federal_2011, acp_ambos_2011, acp_n_alinhado_20
           type = "text", title = "Results", style = "ajps", apply.coef = exp,  p.auto=FALSE,
           column.labels  = c("Alinhamento Estadual", "Alinhamento Federal", "Alinhamento Ambos", "Não Alinhado"))  
 
-# standardized coefficients
-lm.beta(acp_estadual_2011)
-lm.beta(acp_federal_2011)
-lm.beta(acp_ambos_2011)
-lm.beta(acp_n_alinhado_2011)
 
 #===== IQBM SEPARATED ======#
 des2011 <- function(x, Alinhamento){
