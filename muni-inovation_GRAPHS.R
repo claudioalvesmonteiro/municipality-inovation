@@ -13,16 +13,14 @@
 
 
 # install packages
-install.packages(c("readr", "raster", "readxl", "ggthemes", "qdap", "readxl", "ggplot2", "directlabels", "ggrepel", "readr",
-                   "plyr", "rgdal", "ggmap", "maps", "mapdata", "maptools", "stringi", "DT", "xtable", "ggpubr", "dplyr"))
+# install.packages(c("readr", "raster", "readxl", "ggthemes", "qdap", "readxl", "ggplot2", "directlabels", "ggrepel", "readr",
+#                   "plyr", "rgdal", "ggmap", "maps", "mapdata", "maptools", "stringi", "DT", "xtable", "ggpubr", "dplyr"))
 
 # carregar pacotes
 library(readr); library(raster); library(readxl); library(ggthemes); library(qdap); library(ggplot2); library(directlabels)
 library(ggrepel); library(readr); library(plyr); library(rgdal); library(ggmap); library(maps); library(mapdata)
 library(maptools); library(stringi); library(DT); library(xtable); library(ggpubr); library(dplyr)
 
-# set working directory
-setwd("/Users/mpcp/Documents/Claudio/untitled folder/municipality-innovation/Original Data")
 
 #====== mapping missing data ========#
 
@@ -182,11 +180,11 @@ shape_brasil <- merge(shape_brasil, inova_map_2008, by = "estado")
 #--- arretado theme ---#
 theme_arretado<- function (base_size = 12, base_family = "") {
   theme_minimal(base_size = base_size, base_family = base_family) %+replace% 
-    theme(axis.text.x = element_text(colour= "black",size=11,hjust=.5,vjust=.5,face="plain"),
-          axis.text.y = element_text(colour="black",size=11,angle=0,hjust=1,vjust=0,face="plain"), 
-          axis.title.x = element_text(colour="black",size=12,angle=0,hjust=.5,vjust=0,face="plain"),
-          axis.title.y = element_text(colour="black",size=12,angle=90,hjust=0.5,vjust=0.6,face="plain"),
-          title = element_text(colour="black",size=10,angle=0,hjust=.5,vjust=.5,face="plain"),
+    theme(axis.text.x = element_text(colour= "black", size=11, hjust= .5, vjust=.5, face="plain"),
+          axis.text.y = element_text(colour="black", size=11, angle= 0, hjust=1, vjust=0, face="plain"), 
+          axis.title.x = element_text(colour="black", size=11, angle= 0, hjust=.5, vjust=0, face="bold"),
+          axis.title.y = element_text(colour="black", size=11, angle= 90, hjust=0.5, vjust=0.6, face="bold"),
+          title = element_text(colour="black", size=13, angle=0, hjust= .5, vjust=.5, face="bold"),
           panel.grid.major = element_line(colour = grey(0.85)), 
           panel.grid.minor = element_line(colour = grey(1)),
           legend.key.size = unit(9, "mm"),
@@ -534,3 +532,168 @@ getwd(
 )
 
 data_inova_2008$iqb_pcr_2008
+
+
+#==================================================#
+#            LOGISTIC REGRESSION PLOTS             #
+#==================================================#
+
+#-------------------------#
+# Innovation X Bureaucracy 
+#-------------------------#
+
+# iqb pca 2007
+p1 <- ggplot(data_inova_2008, aes(x = iqb_pcr_2008, y = inova5)) + geom_point() + 
+  stat_smooth(method="glm", method.args=list(family="binomial"), se = FALSE) +
+  labs(title = "2007", x = "IQB ACP", y = "Inovação Municipal") +
+  theme(plot.title = element_text(family = "Trebuchet MS", color="black", face="bold", size=18, hjust=0)) +
+  theme(axis.title = element_text(family = "Trebuchet MS", color="black", face="bold", size=12)) 
+
+
+# iqb factor 2007
+p2 <- ggplot(data_inova_2008, aes(x = iqb_factor_2008, y = inova5)) + geom_point() + 
+  stat_smooth(method="glm", method.args=list(family="binomial"), se = FALSE)+
+labs(title = "2011", x = "IQB IA", y = "Inovação Municipal") +
+  theme(plot.title = element_text(family = "Trebuchet MS", color="black", face="bold", size=18, hjust=0)) +
+  theme(axis.title = element_text(family = "Trebuchet MS", color="black", face="bold", size=12)) 
+
+
+# iqb pca 2011
+p3 <- ggplot(data_inova_2012, aes(x = iqb_pcr_2012, y = inova7)) + geom_point() + 
+  stat_smooth(method="glm", method.args=list(family="binomial"), se = FALSE)+
+  labs(x = "IQB ACP", y = "Inovação Municipal") +
+  theme(axis.title = element_text(family = "Trebuchet MS", color="black", face="bold", size=12)) 
+
+# iqb factor 2011
+p4 <- ggplot(data_inova_2012, aes(x = iqb_factor_2012, y =inova7)) + geom_point() + 
+  stat_smooth(method="glm", method.args=list(family="binomial"), se = FALSE) +
+  labs(x = "IQB IA", y = "Inovação Municipal") +
+  theme(axis.title = element_text(family = "Trebuchet MS", color="black", face="bold", size=12)) 
+
+# arrange plots and save
+library(ggpubr)
+figure <- ggarrange(p1, p2, p3, p4, ncol = 2, nrow = 2)
+ggsave("bur_inova_plot.png", width = 9, height = 6)
+
+
+#-------------------------#
+# Innovation X Money$ 
+#-------------------------#
+
+# iqb pca 2007
+p11 <- ggplot(data_inova_2008, aes(x = log_orcamento_2008, y = inova5)) + geom_point() + 
+  stat_smooth(method="glm", method.args=list(family="binomial"), se = FALSE) +
+  labs(title = "2007", x = "Orçamento Municipal (log)", y = "Inovação Municipal") +
+  theme(plot.title = element_text(family = "Trebuchet MS", color="black", face="bold", size=18, hjust=0)) +
+  theme(axis.title = element_text(family = "Trebuchet MS", color="black", face="bold", size=12)) 
+
+# iqb factor 2011
+p22 <- ggplot(data_inova_2012, aes(x = log_orcamento_2012, y =inova7)) + geom_point() + 
+  stat_smooth(method="glm", method.args=list(family="binomial"), se = FALSE) +
+  labs(title = "2011", x = "Orçamento Municipal (log)", y = "Inovação Municipal") +
+  theme(plot.title = element_text(family = "Trebuchet MS", color="black", face="bold", size=18, hjust=0)) +
+  theme(axis.title = element_text(family = "Trebuchet MS", color="black", face="bold", size=12)) 
+
+# arrange plots and save
+library(ggpubr)
+figure2 <- ggarrange(p11, p22)
+figure2
+ggsave("orc_inova_plot.png", width = 10, height = 4)
+
+#--------------------#
+# regression results #
+#--------------------#
+
+#---- coeffcients plot 1 ----#
+coef.plot1 <- function(model, title){
+  coefs <- as.data.frame(summary(model)$coefficients[-1,1:2])
+  names(coefs)[2] <- "se" 
+  coefs$vars <- rownames(coefs)
+  
+  coefplot <- ggplot(coefs, aes(vars, Estimate)) +
+    geom_hline(yintercept=0, lty=2, lwd=1, colour="grey50") +
+    geom_errorbar(aes(ymin=Estimate - 1.96*se, ymax=Estimate + 1.96*se),lwd=.6, colour="black", width=0) +
+    geom_errorbar(aes(ymin=Estimate - se, ymax=Estimate + se),lwd=1, colour="black", width=0) +
+    geom_point(size=1.3, pch=21, fill="black") + scale_x_discrete(name = "") + 
+    scale_y_continuous(name = "Intervalo de Confiança") +
+    theme_arretado()+
+    coord_flip() +
+    labs(title = title)
+  return(coefplot)
+}
+
+#---- plot models 2007 ----#
+cp1 <- plot_odds(acp_estadual_2008, "Alin. Estadual")
+cp2 <- plot_odds(acp_federal_2008, "Alin. Federal")
+cp3 <- plot_odds(acp_ambos_2008, "Alin. em Ambos")
+cp4 <- plot_odds(acp_n_alinhado_2008, "Não Alinhado")
+
+# arrange plots and save
+figure3 <- ggarrange(cp1, cp2, cp3, cp4, nrow = 2, ncol = 2)
+annotate_figure(figure3,
+                top = text_grob("Resultado Modelos de Inovação Municipal 2007",face = "bold", size = 16))
+ggsave("result_plot_IQBACP20071.png", width = 11, height = 8)
+
+
+#---- plot models 2011 ----#
+cp11 <- plot_odds(acp_estadual_2011, "Alin. Estadual")
+cp22 <- plot_odds(acp_federal_2011, "Alin. Federal")
+cp33 <- plot_odds(acp_ambos_2011, "Alin. em Ambos")
+cp44 <- plot_odds(acp_n_alinhado_2011, "Não Alinhado")
+
+# arrange plots and save
+figure4 <- ggarrange(cp11, cp22, cp33, cp44, nrow = 2, ncol = 2)
+annotate_figure(figure4,
+                top = text_grob("Resultado Modelos de Inovação Municipal 2011",face = "bold", size = 16))
+ggsave("result_plot_IQBACP2011.png", width = 11, height = 8)
+
+#======================================#
+# outlier boxplots    (BUILDING)       #
+
+# 
+is_outlier <- function(x) {
+  return(x < quantile(x, 0.25) - 1.5 * IQR(x) | x > quantile(x, 0.75) + 1.5 * IQR(x))
+}
+
+data_inova_2008$outlier <- is_outlier(data_inova_2008$IQB_ACP)
+sum(data_inova_2011$outlier)
+
+data_inova_2011$outlier <- is_outlier(data_inova_2011$IQB_ACP)
+data_inova_2011$outlier
+data_inova_2008$outlier <- ifelse(data_inova_2008$outlier == TRUE, data_inova_2008$municipio, "")
+
+ggplot(data = data_inova_2008, aes(x = "", y = data_inova_2008$IQB_ACP)) + 
+  geom_boxplot() 
+
+ggplot(data = data_inova_2008, aes(IQB_ACP)) +
+  geom_histogram(binwidth = 0.01)
+
+
+#================================#
+#
+
+
+plot_odds<-function(x, title = NULL){
+  tmp<-data.frame(cbind(exp(coef(x)), exp(confint(x))))
+  odds<-tmp[-1,]
+  names(odds)<-c('OR', 'lower', 'upper')
+  odds$vars<-row.names(odds)
+  ticks<-c(1)
+  
+  ggplot(odds, aes(y= OR, x = reorder(vars, OR))) +
+    geom_point() +
+    geom_errorbar(aes(ymin=lower, ymax=upper), width=.2) +
+    scale_y_log10(breaks=ticks, labels = ticks) +
+    geom_hline(yintercept = 1, linetype=2) +
+    coord_flip() +
+    labs(title = title, x = 'Variables', y = 'OR') +
+    theme_bw()
+}
+
+
+
+
+
+
+
+
