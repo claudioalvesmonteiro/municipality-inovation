@@ -155,12 +155,10 @@ data_bur_esc_2008 <-  data.frame(sapply(data_bur_esc_2008, function(x) as.numeri
 
 #---------------------------------------------------------#
 # 1 - Knowledge of Permanent Bureaucracy
-# ( Estatutarios + CLT (ensino superior e p?s-gradua??o) / total de funcion?rios)
+# ( Estatutarios + CLT (ensino superior e pos-graduacaoo) / total de funcion?rios)
 
 data_bur_total_2008 <- data_bur_total_2008[!(data_bur_total_2008$estatutarios + data_bur_total_2008$clt)  == 0,]
 data_bur_esc_2008 <- data_bur_esc_2008[!(data_bur_esc_2008$ESTATUTARIOS + data_bur_esc_2008$CLT)  == 0,]
-
-(data_bur_total_2012$estatutarios + data_bur_total_2012$celetistas) 
 
 # calculate variable
 data_bur_esc_2008$bur_escol_2008 <- (data_bur_esc_2008$ESTATUTARIOS_ES + data_bur_esc_2008$ESTATUTARIOS_POS + 
@@ -484,7 +482,7 @@ data_inova_2008 <- merge(data_inova_2008, RO2008, by = "code_merge")
 
 # remover duplicata e missing cases
 data_inova_2008 <- data_inova_2008[!duplicated(data_inova_2008$code_muni),]
-#data_inova_2008 <- data_inova_2008[complete.cases(data_inova_2008),]
+data_inova_2008 <- data_inova_2008[complete.cases(data_inova_2008),]
 
 #---------------#  
 # 2012          #
@@ -512,7 +510,7 @@ data_inova_2012 <- merge(data_inova_2012, RO2012, by = "code_merge")
 
 # remover duplicata e missing cases
 data_inova_2012 <- data_inova_2012[!duplicated(data_inova_2012$code_muni),]
-#data_inova_2012 <- data_inova_2012[complete.cases(data_inova_2012),]
+data_inova_2012 <- data_inova_2012[complete.cases(data_inova_2012),]
 
 #===================================#
 # QUALITY OF BUREAUCRACY INDEX      #

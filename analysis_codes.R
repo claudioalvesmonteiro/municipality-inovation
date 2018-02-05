@@ -46,14 +46,14 @@ colnames(data_inova_2008) <- c( "idx", "codigo1", "codigo_ibge_1", "codigo_ibge_
 acp2008 <- function(x, Alinhamento){
   glm(Prêmio_Inovação_2007 ~  
         IQB_ACP +
-  #      Alinhamento +
-   #     Conselho +
-    #   Orçamento_log +
-    #   Distância_até_Capital_log +
-    #   Município_Metropolitano +
-    #    Reeleição +
-     #   Idade_Prefeito +
-   #     Escolaridade_Prefeito+
+        Alinhamento +
+        Orçamento_log +
+        Conselho +
+        Distância_até_Capital_log +
+    #    Município_Metropolitano +
+         Reeleição +
+        Idade_Prefeito +
+        Escolaridade_Prefeito+
         log(População) +
         IDHM
    , 
