@@ -58,6 +58,7 @@ colnames(data_inova_2008) <- c( "idx", "codigo1", "codigo_ibge_1", "codigo_ibge_
                                 "Munic_pio", "municipio.y", "Or_amento",   "Or_amento_log",       
                                 "IQB_ACP", "IQB_IA")
 
+data_inova_2008 <- data_inova_2008[sample(nrow(data_inova_2008), 3), ]
 #===== IQBM ACP ======#
 acp2008 <- function(x, Alinhamento){
   glm(Pr_mio_Inova__o_2007 ~  
