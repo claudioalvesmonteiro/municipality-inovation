@@ -12,7 +12,7 @@
 #-----------------------------------------#
 
 # install packages
-install.packages(c("readr","stringr","stringi","readxl","dplyr","foreign","xlsx","corrplot","data.table", "psych"))
+# install.packages(c("readr","stringr","stringi","readxl","dplyr","foreign","xlsx","corrplot","data.table", "psych"))
 
 # load required packages
 library(readr); library(stringr); library(stringi); library(readxl); library(dplyr)
@@ -484,7 +484,7 @@ data_inova_2008 <- merge(data_inova_2008, RO2008, by = "code_merge")
 
 # remover duplicata e missing cases
 data_inova_2008 <- data_inova_2008[!duplicated(data_inova_2008$code_muni),]
-data_inova_2008 <- data_inova_2008[complete.cases(data_inova_2008),]
+#data_inova_2008 <- data_inova_2008[complete.cases(data_inova_2008),]
 
 #---------------#  
 # 2012          #
@@ -492,8 +492,6 @@ data_inova_2008 <- data_inova_2008[complete.cases(data_inova_2008),]
 # select 2012 data
 data_inova_2012 <- data_inova_2012[,c("code_muni", "code_muni2", "code_merge", "IDHM", "UF", "municipio", "Nome_UF",
                                       "log_to_brasilia", "log_to_capital", "metropolitano", 
-                                      
-                                      
                                       "pop_2012","partido_pt_2012",
                                       "inova7", "pop_2012", "bur_consel_2012",  "cand_reelec_2012", "cand_sex_2012", "cand_esc_2012", "cand_age_2012", 
                                       "bur_escol_2011","bur_terc_2011",  "bur_espel_2012","bur_polit_2012", "alinhamento_estadual_2012",
@@ -514,7 +512,7 @@ data_inova_2012 <- merge(data_inova_2012, RO2012, by = "code_merge")
 
 # remover duplicata e missing cases
 data_inova_2012 <- data_inova_2012[!duplicated(data_inova_2012$code_muni),]
-data_inova_2012 <- data_inova_2012[complete.cases(data_inova_2012),]
+#data_inova_2012 <- data_inova_2012[complete.cases(data_inova_2012),]
 
 #===================================#
 # QUALITY OF BUREAUCRACY INDEX      #
@@ -558,7 +556,7 @@ psych_pcr_2008$communality
 pcr1 <- princomp(data_iqb_2008, cor=T)
 pcr1
 # component 1 to index
-data_inova_2008$iqb_pcr_2008 <- range01(as.vector(psych_pcr_2008$scores))
+data_inova_2008$iqb_pcr_2008 <- 1 - range01(as.vector(psych_pcr_2008$scores))/1
 
 #------------#
 # 2012       
@@ -573,7 +571,7 @@ psych_pcr_2012$communality
 pcr2 <- princomp(data_iqb_2012, cor=T)
 
 # component 1 to index
-data_inova_2012$iqb_pcr_2012 <- range01(as.vector(psych_pcr_2012$scores))
+data_inova_2012$iqb_pcr_2012 <- 1 - range01(as.vector(psych_pcr_2012$scores))
 
 #-----------#
 # plot pcr
