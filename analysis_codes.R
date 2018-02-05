@@ -50,13 +50,8 @@ acp2008 <- function(x, Alinhamento){
         Orçamento_log +
         Conselho +
         Distância_até_Capital_log +
-<<<<<<< HEAD
         Município_Metropolitano +
         Reeleição +
-=======
-    #    Município_Metropolitano +
-         Reeleição +
->>>>>>> ae2510b8784a4f721882d140689f2e082a6d02b1
         Idade_Prefeito +
         Escolaridade_Prefeito+
         log(População) +
@@ -259,21 +254,3 @@ ia_n_alinhado_2011 <- ia_2011(data_inova_2011, data_inova_2011$Não_Alinhado)
 stargazer(ia_estadual_2011, ia_federal_2011, ia_ambos_2011, ia_n_alinhado_2011,
           type = "text", title = "Results", style = "ajps", 
           column.labels  = c("Alinhamento Estadual", "Alinhamento Federal", "Alinhamento Ambos", "Não Alinhado"))  
-
-# run standardized coefficients
-lm.beta(ia_estadual_2011)
-lm.beta(ia_federal_2011)
-lm.beta(ia_ambos_2011)
-lm.beta(ia_n_alinhado_2011)
-© 2018 GitHub, Inc.
-Terms
-Privacy
-Security
-Status
-Help
-Contact GitHub
-API
-Training
-Shop
-Blog
-About
