@@ -17,6 +17,8 @@
 # load packages
 library(readr) ; library(stargazer); library(QuantPsyc)
 
+# set working directory
+setwd("Analysis Data")
 
 #====================#
 #    2008 MODELS     #
@@ -32,7 +34,7 @@ data_inova_2008$cand_reelec_2008 <- factor(data_inova_2008$cand_reelec_2008)
 data_inova_2008$cand_sex_2008    <- factor(data_inova_2008$cand_sex_2008, levels = c("0", "1"), labels = c("-masc", "-fem"))
 data_inova_2008$cand_age_2008    <- as.numeric(data_inova_2008$cand_age_2008)
 
-# rename colnames
+# rename columns
 colnames(data_inova_2008) <- c( "idx", "codigo1", "codigo_ibge_1", "codigo_ibge_2", "IDHM", "Sigla_Estado", "municipio", "Estado",                  
                                 "Distância_Até_Brasília_(log)", "Distância_até_Capital_log",  "Município_Metropolitano", "População",                
                                 "Prêmio_Inovação_2007", "População2", "Conselho", "Reeleição",  
