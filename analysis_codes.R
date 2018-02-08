@@ -172,7 +172,7 @@ acp2011 <- function(x, Alinhamento){
         Orçamento_log +
         log(População) +
         Distância_até_Capital_log +
- #       Município_Metropolitano +
+       Município_Metropolitano +
         Reeleição +
         Idade_Prefeito +
         Escolaridade_Prefeito, 
@@ -220,13 +220,6 @@ des_n_alinhado_2011 <- des2011(data_inova_2011, data_inova_2011$Não_Alinhado)
 stargazer(des_estadual_2011, des_federal_2011, des_ambos_2011, des_n_alinhado_2011,
           type = "text", title = "Results", style = "ajps", apply.coef = exp,  p.auto=FALSE,
           column.labels  = c("Alinhamento Estadual", "Alinhamento Federal", "Alinhamento Ambos", "Não Alinhado"))  
-
-# run standardized coefficients
-lm.beta(des_estadual_2011)
-lm.beta(des_federal_2011)
-lm.beta(des_ambos_2011)
-lm.beta(des_n_alinhado_2011)
-
 
 # iqb factor  #
 

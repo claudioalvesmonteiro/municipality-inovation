@@ -27,9 +27,9 @@ setwd("/Users/mpcp/Documents/Claudio/untitled folder/municipality-innovation/Ori
 #---------------------------------#
 
 # load AtlasBrasil data
-atlas_data <- AtlasBrasil_Consulta <- data.frame(data.frame(read_delim("AtlasBrasil_Consulta.csv", 
+atlas_data <- AtlasBrasil_Consulta <- data.frame(read_delim("AtlasBrasil_Consulta.csv", 
                                                  ";", escape_double = FALSE, locale = locale(encoding = "latin1"), 
-                                                 trim_ws = TRUE)))
+                                                 trim_ws = TRUE))
 
 # remove 1st line 'Brasil'
 atlas_data <- atlas_data[-1,]
