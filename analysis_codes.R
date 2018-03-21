@@ -266,15 +266,3 @@ lm.beta(ia_estadual_2011)
 lm.beta(ia_federal_2011)
 lm.beta(ia_ambos_2011)
 lm.beta(ia_n_alinhado_2011)
-© 2018 GitHub, Inc.
-Terms
-Privacy
-Security
-Status
-Help
-Contact GitHub
-API
-Training
-Shop
-Blog
-About
