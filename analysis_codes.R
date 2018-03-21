@@ -17,6 +17,7 @@
 # load packages
 library(readr) ; library(stargazer); library(QuantPsyc)
 
+"/home/pacha/Documents/git_projects/municipality-inovation/Original Data"
 
 #====================#
 #    2008 MODELS     #

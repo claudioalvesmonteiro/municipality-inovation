@@ -12,15 +12,15 @@
 #-----------------------------------------#
 
 # install packages
-# install.packages(c("readr","stringr","stringi","readxl","dplyr","foreign","xlsx","corrplot","data.table", "psych"))
+install.packages(c("readr","stringr","stringi","readxl","dplyr","foreign","xlsx","corrplot","data.table", "psych"), dependencies = T)
 
 # load required packages
 library(readr); library(stringr); library(stringi); library(readxl); library(dplyr)
-library(foreign); library(xlsx); library(corrplot); library(data.table); library(psych)
+library(foreign); library(xlxs); library(corrplot); library(data.table); library(psych)
 
 
 # set database directory
-setwd("/Users/mpcp/Documents/Claudio/untitled folder/municipality-innovation/Original Data")
+setwd("Original Data")
 
 #---------------------------------#
 # Human Development Index (IDHM) 
@@ -613,7 +613,6 @@ cor(data_inova_2012$iqb_factor_2012, data_inova_2012$iqb_pcr_2012)
 #-----------------#
 # Save data       #
 #-----------------#
-setwd("/Users/mpcp/Documents/Claudio/untitled folder/municipality-innovation/Analysis Data")
 
 #-----------#
 # 2008      #
