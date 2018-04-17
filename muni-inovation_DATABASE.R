@@ -646,3 +646,5 @@ write.csv(data_inova_2008, file = "data_inova_2008.csv")
 
 write.csv(data_inova_2012, file = "data_inova_2012.csv")
 #write.xlsx(data_inova_2012, file = "data_inova_2012.xls"
+
+# teste
