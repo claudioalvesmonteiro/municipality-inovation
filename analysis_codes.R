@@ -17,8 +17,7 @@
 # load packages
 library(readr) ; library(stargazer); library(QuantPsyc)
 
-# set working directory
-setwd("Analysis Data")
+"/home/pacha/Documents/git_projects/municipality-inovation/Original Data"
 
 #====================#
 #    2008 MODELS     #
@@ -34,7 +33,7 @@ data_inova_2008$cand_reelec_2008 <- factor(data_inova_2008$cand_reelec_2008)
 data_inova_2008$cand_sex_2008    <- factor(data_inova_2008$cand_sex_2008, levels = c("0", "1"), labels = c("-masc", "-fem"))
 data_inova_2008$cand_age_2008    <- as.numeric(data_inova_2008$cand_age_2008)
 
-# rename columns
+# rename colnames
 colnames(data_inova_2008) <- c( "idx", "codigo1", "codigo_ibge_1", "codigo_ibge_2", "IDHM", "Sigla_Estado", "municipio", "Estado",                  
                                 "Distância_Até_Brasília_(log)", "Distância_até_Capital_log",  "Município_Metropolitano", "População",                
                                 "Prêmio_Inovação_2007", "População2", "Conselho", "Reeleição",  
@@ -52,8 +51,8 @@ acp2008 <- function(x, Alinhamento){
         Orçamento_log +
         Conselho +
         Distância_até_Capital_log +
-        Município_Metropolitano +
-        Reeleição +
+    #    Município_Metropolitano +
+         Reeleição +
         Idade_Prefeito +
         Escolaridade_Prefeito+
         log(População) +
@@ -172,7 +171,7 @@ acp2011 <- function(x, Alinhamento){
         Orçamento_log +
         log(População) +
         Distância_até_Capital_log +
-       Município_Metropolitano +
+        Município_Metropolitano +
         Reeleição +
         Idade_Prefeito +
         Escolaridade_Prefeito, 
@@ -190,6 +189,11 @@ stargazer(acp_estadual_2011, acp_federal_2011, acp_ambos_2011, acp_n_alinhado_20
           type = "text", title = "Results", style = "ajps", apply.coef = exp,  p.auto=FALSE,
           column.labels  = c("Alinhamento Estadual", "Alinhamento Federal", "Alinhamento Ambos", "Não Alinhado"))  
 
+# standardized coefficients
+lm.beta(acp_estadual_2011)
+lm.beta(acp_federal_2011)
+lm.beta(acp_ambos_2011)
+lm.beta(acp_n_alinhado_2011)
 
 #===== IQBM SEPARATED ======#
 des2011 <- function(x, Alinhamento){
@@ -221,6 +225,13 @@ stargazer(des_estadual_2011, des_federal_2011, des_ambos_2011, des_n_alinhado_20
           type = "text", title = "Results", style = "ajps", apply.coef = exp,  p.auto=FALSE,
           column.labels  = c("Alinhamento Estadual", "Alinhamento Federal", "Alinhamento Ambos", "Não Alinhado"))  
 
+# run standardized coefficients
+lm.beta(des_estadual_2011)
+lm.beta(des_federal_2011)
+lm.beta(des_ambos_2011)
+lm.beta(des_n_alinhado_2011)
+
+
 # iqb factor  #
 
 ia_2011 <- function(x, Alinhamento){
@@ -249,3 +260,9 @@ ia_n_alinhado_2011 <- ia_2011(data_inova_2011, data_inova_2011$Não_Alinhado)
 stargazer(ia_estadual_2011, ia_federal_2011, ia_ambos_2011, ia_n_alinhado_2011,
           type = "text", title = "Results", style = "ajps", 
           column.labels  = c("Alinhamento Estadual", "Alinhamento Federal", "Alinhamento Ambos", "Não Alinhado"))  
+
+# run standardized coefficients
+lm.beta(ia_estadual_2011)
+lm.beta(ia_federal_2011)
+lm.beta(ia_ambos_2011)
+lm.beta(ia_n_alinhado_2011)
