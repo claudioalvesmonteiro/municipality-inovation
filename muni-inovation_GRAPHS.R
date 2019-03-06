@@ -25,7 +25,7 @@ library(maptools); library(stringi); library(DT); library(xtable); library(ggpub
 #====== mapping missing data ========#
 
 # load shapefile and reanme citycode
-shape_brasil <- shapefile("Geodata/bra_cities_2010/municipios_2010.shp")
+shape_brasil <- shapefile("Original Data/Geodata/bra_cities_2010/municipios_2010.shp")
 shape_brasil$code_muni2 <- shape_brasil$codigo_ibg
 
 # load data

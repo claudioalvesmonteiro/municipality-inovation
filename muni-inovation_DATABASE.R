@@ -135,7 +135,7 @@ data_metro <- read_excel("dados_metropolitano.xls")
 
 # create and define metropolitan city
 data_metro$metropolitano <- 0
-data_metro$metropolitano[str_detect(data_metro$MesorregiÃ£oGeogrÃ¡fica_Nome, pattern = "Metropolitana")] <- 1
+data_metro$metropolitano[str_detect(data_metro$MesorregiãoGeográfica_Nome, pattern = "Metropolitana")] <- 1
 
 # transform to numeric
 data_metro$metropolitano <- as.numeric(data_metro$metropolitano)
